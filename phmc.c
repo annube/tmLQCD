@@ -111,8 +111,7 @@ void init_phmc() {
      the hermitian Dirac operator (used in EV-computation), namely 
      S = Q Q^dag         
      When  "S"  is applied, we call  phmc_invmaxev  twice !!! */
-  if(g_epsbar!=0.0 || phmc_exact_poly==0) phmc_invmaxev=1./(sqrt(stilde_max));
-  else if(g_epsbar==0.0 && phmc_exact_poly==1) phmc_invmaxev=1./stilde_max;
+  phmc_invmaxev=1./(sqrt(stilde_max));
   phmc_cheb_evmax = 1.0;
 
   /* Here we prepare the less precise polynomial first */
@@ -145,8 +144,6 @@ void init_phmc() {
   */
 
   if(mnl->MDPolyLocNormConst == -1.0){
-    if(!(g_epsbar!=0.0 || phmc_exact_poly==0))
-      filename_const=filename_const_oox;
     if((Const=fopen(filename_const,"r")) != (FILE*)NULL) {
       errcode = fscanf(Const, " %lf \n", &phmc_Cpol);
       fclose(Const);
@@ -162,13 +159,9 @@ void init_phmc() {
     fprintf(stderr,"phmc_Cpol set to %e " , phmc_Cpol);
   }
 
-  if(g_epsbar!=0.0 || phmc_exact_poly==0) phmc_Cpol = sqrt(phmc_Cpol);
+  phmc_Cpol = sqrt(phmc_Cpol);
 
   phmc_root = calloc((2*phmc_dop_n_cheby-2),sizeof(complex));
-
-
-  if(g_epsbar==0.0 && phmc_exact_poly == 1) 
-    filename_phmc_root=filename_phmc_root_oox;
 
   if(strlen(mnl->MDPolyRootsFile)!=0)
     filename_phmc_root=mnl->MDPolyRootsFile;
